@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "migration:generate": "typeorm migration:generate -d ./db/data-source.js -o",
+    "migration:run": "typeorm migration:run -d ./db/data-source.js"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +17,7 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "pg": "^8.22.0"
+    "pg": "^8.22.0",
+    "typeorm": "^1.1.0"
   }
 }
