@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const healthcheckRouter = require('./routes/healthcheck');
 const skillRouter = require('./routes/skill');
+const creditPackageRouter = require('./routes/creditPackage');
 const { dataSource } = require('./db/data-source');
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(cors());
 
 app.use('/healthcheck', healthcheckRouter);
 app.use('/api/coaches/skill', skillRouter);
+app.use('/api/credit-package', creditPackageRouter);
 
 app.use((req, res) => {
   res.status(404).json({ status: 'error', message: 'Page Not Found' });
