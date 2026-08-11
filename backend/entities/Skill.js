@@ -11,7 +11,8 @@ module.exports = new EntitySchema({
     name: {
       type: 'varchar',
       length: 50,
-      nullable: false
+      nullable: false,
+      unique: true
     },
     created_at: {
       type: 'timestamp',
