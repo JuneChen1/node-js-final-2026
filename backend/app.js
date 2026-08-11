@@ -5,6 +5,7 @@ const cors = require('cors');
 const healthcheckRouter = require('./routes/healthcheck');
 
 const app = express();
+app.use(express.json());
 app.use(cors());
 
 app.use('/healthcheck', healthcheckRouter);
@@ -14,8 +15,17 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, next) => {
+  if (err.isOperational) {
+    return res
+      .status(err.statusCode)
+      .json({ status: 'failed', message: err.message });
+  }
+
   console.error(err);
-  res.status(500).json({ status: 'error', message: '伺服器發生錯誤' });
+  res.status(500).json({
+    status: 'failed',
+    message: '伺服器發生錯誤，請稍後再試'
+  });
 });
 
 const PORT = process.env.PORT || 8080;
