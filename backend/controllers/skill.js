@@ -1,6 +1,6 @@
 const { dataSource } = require('../db/data-source');
 const appError = require('../utils/appError');
-const { isValidString } = require('../utils/validUtils');
+const { isValidString, isValidUUID } = require('../utils/validUtils');
 
 const skillController = {
   async getSkills(req, res, next) {
@@ -35,6 +35,10 @@ const skillController = {
   async deleteSkill(req, res, next) {
     try {
       const { skillId } = req.params;
+      if (!isValidUUID(skillId)) {
+        next(appError(400, 'ID錯誤'));
+        return;
+      }
       const skillRepo = dataSource.getRepository('Skill');
       const result = await skillRepo.delete(skillId);
       if (result.affected === 0) {
