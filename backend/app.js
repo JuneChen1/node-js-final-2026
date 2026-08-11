@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const healthcheckRouter = require('./routes/healthcheck');
+const { dataSource } = require('./db/data-source');
 
 const app = express();
 app.use(express.json());
@@ -28,5 +29,15 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`伺服器啟動中：http://localhost:${PORT}`));
+dataSource
+  .initialize()
+  .then(() => {
+    const PORT = process.env.PORT || 8080;
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error('資料庫連線失敗', error);
+    process.exit(1);
+  });
