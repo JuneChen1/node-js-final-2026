@@ -27,10 +27,21 @@ function isValidPassword(password) {
   return passwordRegex.test(password);
 }
 
+function isValidUrl(url) {
+  const urlRegex = /^https:\/\/.+/;
+  return urlRegex.test(url);
+}
+
+function isValidTimestamp(value) {
+  return typeof value === 'string' && !isNaN(Date.parse(value));
+}
+
 module.exports = {
   isValidString,
   isPositiveInteger,
   isValidUUID,
   isValidEmail,
-  isValidPassword
+  isValidPassword,
+  isValidUrl,
+  isValidTimestamp
 };
