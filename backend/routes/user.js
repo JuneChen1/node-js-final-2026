@@ -8,5 +8,7 @@ router.post('/login', userController.login);
 router.get('/profile', isAuth, userController.getProfile);
 router.put('/profile', isAuth, userController.updateProfileName);
 router.put('/password', isAuth, userController.updatePassword);
+router.get('/credit-package', isAuth, userController.getCreditPackage);
+router.get('/courses', isAuth, userController.getCourses);
 
 module.exports = router;

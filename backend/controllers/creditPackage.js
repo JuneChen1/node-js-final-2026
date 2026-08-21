@@ -69,6 +69,32 @@ const creditPackageController = {
     } catch (error) {
       next(error);
     }
+  },
+  async purchase(req, res, next) {
+    const { creditPackageId } = req.params;
+    if (!isValidUUID(creditPackageId)) {
+      return next(appError(400, 'ID錯誤'));
+    }
+    try {
+      const packageRepo = dataSource.getRepository('CreditPackage');
+      const package = await packageRepo.findOneBy({ id: creditPackageId });
+
+      if (!package) {
+        return next(appError(400, 'ID錯誤'));
+      }
+
+      const purchaseRepo = dataSource.getRepository('CreditPurchase');
+      await purchaseRepo.save({
+        purchased_credits: package.credit_amount,
+        price_paid: package.price,
+        creditPackage: { id: package.id },
+        user: { id: req.user.id }
+      });
+
+      res.status(200).json({ status: 'success', data: null });
+    } catch (error) {
+      next(error);
+    }
   }
 };
 

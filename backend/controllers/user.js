@@ -180,6 +180,76 @@ const userController = {
     } catch (error) {
       next(error);
     }
+  },
+  async getCreditPackage(req, res, next) {
+    try {
+      const purchaseRepo = dataSource.getRepository('CreditPurchase');
+      const result = await purchaseRepo.find({
+        where: { user: { id: req.user.id } },
+        relations: { creditPackage: true },
+        order: { created_at: 'DESC' }
+      });
+
+      const data = result.map((item) => {
+        return {
+          name: item.creditPackage.name,
+          purchased_credits: Number(item.purchased_credits),
+          price_paid: Number(item.price_paid),
+          purchase_at: item.created_at
+        };
+      });
+
+      res.status(200).json({
+        status: 'success',
+        data
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  async getCourses(req, res, next) {
+    try {
+      const purchaseRepo = dataSource.getRepository('CreditPurchase');
+      const bookingRepo = dataSource.getRepository('CourseBooking');
+      const allPurchases = await purchaseRepo.find({
+        where: { user: { id: req.user.id } }
+      });
+      const totalCredits = allPurchases.reduce(
+        (acc, cur) => cur.purchased_credits + acc,
+        0
+      );
+
+      const allBookings = await bookingRepo.find({
+        where: { user: { id: req.user.id } },
+        relations: { course: { user: true } },
+        order: { course: { start_at: 'ASC' } }
+      });
+      const creditUsage = allBookings.filter((b) => !b.cancelled_at).length;
+      const creditRemain = totalCredits - creditUsage;
+
+      const courseBooking = allBookings.map((b) => {
+        return {
+          course_id: b.course.id,
+          name: b.course.name,
+          start_at: b.course.start_at,
+          end_at: b.course.end_at,
+          meeting_url: b.course.meeting_url,
+          coach_name: b.course.user.name,
+          cancelled_at: b.cancelled_at
+        };
+      });
+
+      res.status(200).json({
+        status: 'success',
+        data: {
+          credit_remain: creditRemain,
+          credit_usage: creditUsage,
+          course_booking: courseBooking
+        }
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 };
 
