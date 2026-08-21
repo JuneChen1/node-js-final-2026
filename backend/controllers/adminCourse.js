@@ -155,7 +155,10 @@ const courseController = {
         where: { user: { id: req.user.id } }
       });
       const findBookings = await courseBookingRepo.query(
-        'SELECT c.id AS course_id, COUNT(*) AS count FROM course_bookings cb JOIN courses c ON cb.course_id = c.id WHERE c.user_id = $1 AND cb.cancelled_at IS NULL GROUP BY c.id',
+        `SELECT c.id AS course_id, COUNT(*) AS count
+        FROM course_bookings cb
+        JOIN courses c ON cb.course_id = c.id WHERE c.user_id = $1 AND cb.cancelled_at IS NULL
+        GROUP BY c.id`,
         [req.user.id]
       );
 
