@@ -11,6 +11,7 @@ const adminCourseRouter = require('./routes/adminCourse');
 const adminRevenueRouter = require('./routes/adminRevenue');
 const coachRouter = require('./routes/coach');
 const courseRouter = require('./routes/course');
+const uploadRouter = require('./routes/upload');
 const { dataSource } = require('./db/data-source');
 
 const app = express();
@@ -26,6 +27,7 @@ app.use('/api/admin/coaches/revenue', adminRevenueRouter);
 app.use('/api/admin/coaches', adminCoachRouter);
 app.use('/api/coaches', coachRouter);
 app.use('/api/courses', courseRouter);
+app.use('/api/upload', uploadRouter);
 
 app.use((req, res) => {
   res.status(404).json({ status: 'error', message: 'Page Not Found' });

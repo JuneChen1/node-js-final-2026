@@ -47,6 +47,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    env_file:
+      - ./backend/.env
     environment:
       - PORT=8080
       - DB_HOST=postgres
