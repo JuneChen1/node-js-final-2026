@@ -48,7 +48,8 @@ services:
     ports:
       - "8080:8080"
     env_file:
-      - ./backend/.env
+      - path: ./backend/.env
+        required: false
     environment:
       - PORT=8080
       - DB_HOST=postgres
